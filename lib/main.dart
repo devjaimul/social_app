@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:social_app/ui/auth/login_screen.dart';
+import 'package:social_app/ui/auth/sign_in_screen.dart';
 import 'package:social_app/ui/auth/sign_up_screen.dart';
+import 'package:social_app/ui/home/home_screen.dart';
+import 'package:social_app/utlis/app_colors.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -29,9 +32,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
             useMaterial3: true,
-            appBarTheme: AppBarTheme(centerTitle: true)
+            appBarTheme: AppBarTheme(centerTitle: true,backgroundColor:AppColors.primaryColor,foregroundColor: Colors.white)
           ),
-          home:SignUpScreen(),
+          home:FirebaseAuth.instance.currentUser==null?SignInScreen():HomeScreen(),
         );
 },
     );
