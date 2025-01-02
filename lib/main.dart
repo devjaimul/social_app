@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:social_app/ui/auth/sign_in_screen.dart';
-import 'package:social_app/ui/auth/sign_up_screen.dart';
 import 'package:social_app/ui/home/home_screen.dart';
 import 'package:social_app/utlis/app_colors.dart';
 
@@ -32,9 +31,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
             useMaterial3: true,
-            appBarTheme: AppBarTheme(centerTitle: true,backgroundColor:AppColors.primaryColor,foregroundColor: Colors.white)
+            appBarTheme: const AppBarTheme(centerTitle: true,backgroundColor:AppColors.primaryColor,foregroundColor: Colors.white)
           ),
-          home:FirebaseAuth.instance.currentUser==null?SignInScreen():HomeScreen(),
+          home:FirebaseAuth.instance.currentUser==null?const SignInScreen():const HomeScreen(),
         );
 },
     );
