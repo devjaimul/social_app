@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:social_app/global%20widgets/custom_text.dart';
+import 'package:social_app/global%20widgets/custom_text_button.dart';
 import 'package:social_app/global%20widgets/custom_text_field.dart';
+import 'package:social_app/utlis/app_colors.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -63,6 +66,52 @@ class _SearchScreenState extends State<SearchScreen> {
                           return ListTile(
                             title: Text(doc['userName']),
                             subtitle: Text(doc['email']),
+                            trailing: FutureBuilder<DocumentSnapshot>(
+                                future: doc.reference
+                                    .collection("followers")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .get(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data?.exists ?? false) {
+                                      return SizedBox(
+                                        width: 100.w,
+                                        height: 40.h,
+                                        child: CustomTextButton(
+                                          text: "UnFollow",
+                                          onTap: () async {
+                                            await doc.reference
+                                                .collection("followers")
+                                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                                .delete();
+                                            setState(() {});
+                                          },
+                                        ),
+                                      );
+                                    }
+                                    return SizedBox(
+                                      width: 80.w,
+                                      child: CustomTextButton(
+                                        text: "Follow",
+                                        onTap: () async {
+                                          await doc.reference
+                                              .collection("followers")
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              .set({"time": DateTime.now()});
+                                          setState(() {
+
+                                          });
+                                        },
+
+                                        color: AppColors.primaryColor,
+                                      ),
+                                      height: 40.h,
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
+                                }),
                           );
                         },
                       ),
