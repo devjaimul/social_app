@@ -32,11 +32,12 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: searchTEController,
               hintText: "Search by username",
               onChanged: (value) {
-                name = value;
+                name = value.trim(); // Trim whitespace
                 setState(() {});
               },
             ),
-            if (name != null && name!.length > 3)
+            SizedBox(height: 16.h),
+            if (name != null && name!.isNotEmpty && name!.length > 3)
               FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
                     .collection("users")
@@ -44,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // Show a loading indicator
+                    return Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
@@ -52,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (snapshot.hasData) {
                     final docs = snapshot.data!.docs;
                     if (docs.isEmpty) {
-                      return Text("No user found!");
+                      return Text("No user found with username: $name");
                     }
                     return Flexible(
                       child: ListView.builder(
@@ -61,6 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           DocumentSnapshot doc = docs[index];
                           return ListTile(
                             title: Text(doc['userName']),
+                            subtitle: Text(doc['email']),
                           );
                         },
                       ),
@@ -68,7 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                   return Text("No results found.");
                 },
-              )
+              ),
           ],
         ),
       ),
