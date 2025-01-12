@@ -42,6 +42,9 @@ dependencies:
   get:
   form_validator: ^2.1.1
   google_fonts: ^6.2.1
+  chat_bubbles: ^1.7.0
+  image_picker: ^1.1.2
+  firebase_storage: ^12.4.0
 
 
 dev_dependencies:
