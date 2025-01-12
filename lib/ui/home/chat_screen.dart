@@ -4,12 +4,14 @@ import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/global%20widgets/custom_text.dart';
+import 'package:social_app/ui/widgets/call_page.dart';
 import 'package:social_app/utlis/app_colors.dart'; // For formatting timestamps
 
 class ChatScreen extends StatefulWidget {
@@ -87,6 +89,36 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.chatPartnerName),
+        actions: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CallPage(
+                    callId: 'video_call_room_1',
+                    isVideoCall: true,
+                  ),
+                ),
+              );
+            }, icon: Icon(Icons.video_call)),
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CallPage(
+                    callId: 'audio_call_room_1',
+                    isVideoCall: false,
+                  ),
+                ),
+              );
+            }, icon: Icon(Icons.phone)),
+
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -193,4 +225,21 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+  void sendCallNotification(String receiverId, bool isVideoCall) async {
+    var receiverDoc = await FirebaseFirestore.instance.collection('users').doc(receiverId).get();
+    String? fcmToken = receiverDoc['fcmToken'];
+
+    if (fcmToken != null) {
+      // Simulating an API call to send a notification
+      FirebaseMessaging.instance.sendMessage(
+        to: fcmToken,
+        data: {
+          'type': 'call',
+          'callId': '${currentUserId}_${receiverId}',
+          'isVideoCall': isVideoCall.toString(),
+        },
+      );
+    }
+  }
+
 }

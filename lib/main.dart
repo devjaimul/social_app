@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:social_app/ui/auth/sign_in_screen.dart';
 import 'package:social_app/ui/home/home_screen.dart';
 import 'package:social_app/utlis/app_colors.dart';
-
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

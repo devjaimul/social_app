@@ -45,6 +45,8 @@ dependencies:
   chat_bubbles: ^1.7.0
   image_picker: ^1.1.2
   firebase_storage: ^12.4.0
+  zego_uikit_prebuilt_call: ^4.16.21
+  firebase_messaging: ^15.2.0
 
 
 dev_dependencies:
